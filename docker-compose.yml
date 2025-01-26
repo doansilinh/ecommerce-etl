@@ -1,0 +1,32 @@
+version: '3.1'
+
+networks:
+  mynetwork:
+    driver: bridge
+
+services:
+  mysql:
+    image: mysql:9.2.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: source_db
+      MYSQL_USER: mysql_admin
+      MYSQL_PASSWORD: mysql_admin
+    ports:
+      - "3306:3306"
+    networks:
+      - mynetwork
+  postgresql:
+    image: postgres:14.15-alpine
+    container_name: postgresql
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres_admin
+      - POSTGRES_PASSWORD=postgres_admin
+      - POSTGRES_DB=target_db
+    ports:
+      - '5432:5432'
+    networks:
+      - mynetwork
