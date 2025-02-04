@@ -1,0 +1,19 @@
+{
+    "name": "jdbc-connector",
+    "config": {
+        "connector.class": "io.debezium.connector.jdbc.JdbcSinkConnector",
+        "tasks.max": "1",
+        "connection.url": "jdbc:postgresql://postgresql1/postgresql1",
+        "connection.username": "postgresql1",
+        "connection.password": "postgresql1",
+        "hiberbate.dialect": "org.hibernate.dialect.PostgreSQLDialect",
+        "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "insert.mode": "upsert",
+        "delete.enabled": "true",
+        "primary.key.mode": "record_key",
+        "schema.evolution": "basic",
+        "use.time.zone": "UTC",
+        "topics": "raw.mysql1.supplier_dim,raw.mysql1.product_dim, raw.mysql1.customer_dim, raw.mysql1.employee_dim, raw.mysql1.date_dim, raw.mysql1.status_dim, raw.mysql1.payment_dim, raw.mysql1.sale_fact"
+    }
+}

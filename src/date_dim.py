@@ -19,4 +19,5 @@ def gen_date_dim(amount):
     dates["year"] = dates["date"].dt.year
     dates["month"] = dates["date"].dt.month
     dates["day"] = dates["date"].dt.day
+    dates = dates.drop_duplicates(subset=["date_id"])
     return dates

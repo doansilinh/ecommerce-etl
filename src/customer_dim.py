@@ -27,12 +27,10 @@ def gen_customer_dim(amount):
             "job": fs("person.occupation"),
             "nationality": fs("person.nationality"),
             "created_at": fs("datetime.date", start=2000, end=2005),
-            "updated_at": fs("datetime.date", start=2010, end=2015),
             "is_active": fs("random.weighted_choice", choices={True: 0.9, False: 0.1}),
         }
     )
     customers["birthday"] = pd.to_datetime(customers["birthday"])
     customers["created_at"] = pd.to_datetime(customers["created_at"])
-    customers["updated_at"] = pd.to_datetime(customers["updated_at"])
 
     return customers

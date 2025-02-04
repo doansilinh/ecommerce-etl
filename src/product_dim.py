@@ -9,7 +9,7 @@ def gen_product_dim(amount, supplier_ids):
     products1 = pd.DataFrame.from_dict(
         {
             "product_id": fs("uuid"),
-            "name": fs("food.dish"),
+            "product_name": fs("food.dish"),
             "category": "dish",
             "supplier_id": fs("random.choice_enum_item", enum=supplier_ids),
             "price": fs("random.uniform", a=50000, b=200000, precision=0),
@@ -19,7 +19,7 @@ def gen_product_dim(amount, supplier_ids):
     products2 = pd.DataFrame.from_dict(
         {
             "product_id": fs("uuid"),
-            "name": fs("food.drink"),
+            "product_name": fs("food.drink"),
             "category": "drink",
             "supplier_id": fs("random.choice_enum_item", enum=supplier_ids),
             "price": fs("random.uniform", a=50000, b=200000, precision=0),
@@ -29,7 +29,7 @@ def gen_product_dim(amount, supplier_ids):
     products3 = pd.DataFrame.from_dict(
         {
             "product_id": fs("uuid"),
-            "name": fs("food.fruit"),
+            "product_name": fs("food.fruit"),
             "category": "fruit",
             "supplier_id": fs("random.choice_enum_item", enum=supplier_ids),
             "price": fs("random.uniform", a=50000, b=200000, precision=0),
@@ -39,7 +39,7 @@ def gen_product_dim(amount, supplier_ids):
     products4 = pd.DataFrame.from_dict(
         {
             "product_id": fs("uuid"),
-            "name": fs("food.spices"),
+            "product_name": fs("food.spices"),
             "category": "spices",
             "supplier_id": fs("random.choice_enum_item", enum=supplier_ids),
             "price": fs("random.uniform", a=50000, b=200000, precision=0),
@@ -49,7 +49,7 @@ def gen_product_dim(amount, supplier_ids):
     products5 = pd.DataFrame.from_dict(
         {
             "product_id": fs("uuid"),
-            "name": fs("food.vegetable"),
+            "product_name": fs("food.vegetable"),
             "category": "vegetable",
             "supplier_id": fs("random.choice_enum_item", enum=supplier_ids),
             "price": fs("random.uniform", a=50000, b=200000, precision=0),

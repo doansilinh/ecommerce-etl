@@ -8,8 +8,8 @@ def gen_supplier_dim(amount):
     suppliers = pd.DataFrame.from_dict(
         {
             "supplier_id": fs("uuid"),
-            "name": fs("finance.company"),
-            "type": fs("finance.company_type"),
+            "supplier_name": fs("finance.company"),
+            "supplier_type": fs("finance.company_type"),
             "country": fs("person.nationality"),
             "email": fs("person.email"),
             "phone": fs("person.phone_number", mask="09########"),

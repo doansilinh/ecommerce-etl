@@ -10,7 +10,7 @@ def gen_sale_fact(
     sales = pd.DataFrame.from_dict(
         {
             "sale_id": fs("uuid"),
-            "product_ids": fs("random.choice_enum_item", enum=product_ids),
+            "product_id": fs("random.choice_enum_item", enum=product_ids),
             "customer_id": fs("random.choice_enum_item", enum=customer_ids),
             "employee_id": fs("random.choice_enum_item", enum=employee_ids),
             "date_id": fs("random.choice_enum_item", enum=date_ids),

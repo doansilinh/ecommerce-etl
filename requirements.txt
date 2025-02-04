@@ -1,2 +1,3 @@
 mimesis
 pandas
+sqlalchemy

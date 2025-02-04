@@ -1,32 +1,118 @@
-version: '3.1'
-
 networks:
   mynetwork:
     driver: bridge
 
 services:
-  mysql:
+  mysql1:
     image: mysql:9.2.0
-    container_name: mysql
+    container_name: mysql1
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: source_db
-      MYSQL_USER: mysql_admin
-      MYSQL_PASSWORD: mysql_admin
+      MYSQL_DATABASE: mysql1
+      MYSQL_USER: mysql1
+      MYSQL_PASSWORD: mysql1
     ports:
       - "3306:3306"
     networks:
       - mynetwork
-  postgresql:
+    volumes:
+      - ./table_script/create_table.sql:/docker-entrypoint-initdb.d/create_table.sql
+
+  postgresql1:
     image: postgres:14.15-alpine
-    container_name: postgresql
+    container_name: postgresql1
     restart: always
     environment:
-      - POSTGRES_USER=postgres_admin
-      - POSTGRES_PASSWORD=postgres_admin
-      - POSTGRES_DB=target_db
+      - POSTGRES_USER=postgresql1
+      - POSTGRES_PASSWORD=postgresql1
+      - POSTGRES_DB=postgresql1
     ports:
       - '5432:5432'
+    networks:
+      - mynetwork
+    # volumes:
+    #   - ./mysql/create_table.sql:/docker-entrypoint-initdb.d/create_table.sql
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+      - "2888:2888"
+      - "3888:3888"
+    depends_on:
+      - mysql1
+      - postgresql1
+    networks:
+      - mynetwork
+
+  kafka1:
+    image: confluentinc/cp-kafka:7.3.0
+    container_name: kafka1
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:29092, PLAINTEXT_HOST://localhost:9892
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_JMX_PORT: 9101
+      KAFKA_JMX_HOSTNAME: localhost
+    ports:
+      - "29092:29092"
+    depends_on:
+      - mysql1
+      - postgresql1
+      - zookeeper
+    networks:
+      - mynetwork
+
+  debezium_connect:
+    image: quay.io/debezium/connect:3.1
+    container_name: debezium_connect
+    environment:
+      BOOTSTRAP_SERVERS: kafka1:29092
+      CONFIG_STORAGE_TOPIC: debezium_connect_config
+      OFFSET_STORAGE_TOPIC: debezium_connect_offsets
+      STATUS_STORAGE_TOPIC: debezium_connect_status
+      KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      INTERNAL_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      INTERNAL_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_OFFSET_STORAGE_PARTITIONS: 1
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_REST_ADVERTISED_HOST_NAME: debezium_connect
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mysql1
+      - postgresql1
+      - zookeeper
+      - kafka1
+    networks:
+      - mynetwork
+
+  kafka_ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka_ui
+    environment:
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:29092
+      KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME: first
+      KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: http://debezium_connect:8083
+      DYNAMIC_CONFIG_ENABLED: "true"
+    ports:
+      - "8082:8080"
+    depends_on:
+      - mysql1
+      - postgresql1
+      - kafka1
+      - zookeeper
+      - debezium_connect
     networks:
       - mynetwork
