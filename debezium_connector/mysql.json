@@ -11,6 +11,6 @@
         "topic.prefix": "raw",
         "database.include.list": "mysql1",
         "schema.history.internal.kafka.bootstrap.servers": "kafka1:29092",
-        "schema.history.internal.kafka.topic": "schema-changes.mysql"
+        "schema.history.internal.kafka.topic": "schema-changes.mysql1"
     }
 }

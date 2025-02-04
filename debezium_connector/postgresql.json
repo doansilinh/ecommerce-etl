@@ -1,5 +1,5 @@
 {
-    "name": "jdbc-connector",
+    "name": "postgresql-connector",
     "config": {
         "connector.class": "io.debezium.connector.jdbc.JdbcSinkConnector",
         "tasks.max": "1",

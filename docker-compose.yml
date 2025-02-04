@@ -44,9 +44,6 @@ services:
       - "2181:2181"
       - "2888:2888"
       - "3888:3888"
-    depends_on:
-      - mysql1
-      - postgresql1
     networks:
       - mynetwork
 
@@ -67,8 +64,6 @@ services:
     ports:
       - "29092:29092"
     depends_on:
-      - mysql1
-      - postgresql1
       - zookeeper
     networks:
       - mynetwork
@@ -91,8 +86,6 @@ services:
     ports:
       - "8083:8083"
     depends_on:
-      - mysql1
-      - postgresql1
       - zookeeper
       - kafka1
     networks:
@@ -109,8 +102,6 @@ services:
     ports:
       - "8082:8080"
     depends_on:
-      - mysql1
-      - postgresql1
       - kafka1
       - zookeeper
       - debezium_connect
